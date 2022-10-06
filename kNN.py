@@ -26,7 +26,7 @@ def knn(k, x_train, y_train, x_test, y_test):
 
 def find_best_k():
     x_train, y_train, x_test, y_test = init()
-    k_values = [1, 3, 5]
+    k_values = [1, 3, 5, 25, 100]
     best_k = -1
     best_validation_score = -1
     k_cv_score = {}
