@@ -82,3 +82,6 @@ for C in penalties:
     mean_crossval = np.mean(cross_val_score(curr_svm, Xsmall, Ysmall, cv=fold))
     mcv_scores.append(mean_crossval)
     print("On C=", C, "\tMCV=", mean_crossval)
+#highest MCV of 87.01% when C = 21.544
+
+#using k=10 --> highest MCV of 87.79% when C = 5.994
