@@ -7,7 +7,7 @@ import random
 import sklearn
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.svm import SVC
 from sklearn.utils import shuffle
 from sklearn.model_selection import cross_val_score
@@ -15,15 +15,17 @@ from sklearn.model_selection import KFold
 
 
 #Loading of data, split into X(features) and Y(labels)
-train = pd.read_csv('/Users/kohlongyang/Desktop/CS3244/fashion-mnist_train.csv')
-test = pd.read_csv('/Users/kohlongyang/Desktop/CS3244/fashion-mnist_test.csv')
+train = pd.read_csv('/Users/kohlongyang/Desktop/fashion-mnist_train.csv')
+test = pd.read_csv('/Users/kohlongyang/Desktop/fashion-mnist_test.csv')
 random.seed(3244)
 valid = train.sample(frac=0.20)
+train = train.drop(valid.index)
+#print(train.shape)
 #print(valid.head(3))
 
-Ytrain = train['label']
-Yvalid = valid['label']
-Ytest = test['label']
+Ytrain = train.iloc[:, 0]
+Yvalid = valid.iloc[:, 0]
+Ytest = test.iloc[:, 0]
 
 Xtrain = train.loc[:,train.columns!='label']
 Xvalid = valid.loc[:, valid.columns!='label']
@@ -49,8 +51,34 @@ SVM.fit(Xtrainfit, Ytrain)
 Y_predict = SVM.predict(Xtestfit)
 accuracy = SVM.score(Xtestfit, Ytest)
 print('SVM Model Accuracy is:' ,accuracy)
-#85.97%
+#85.57%
 
-#conf_matrix =  confusion_matrix(Ytest, Y_predict)
-#PlotConfusionMatrix(conf_matrix, list(range(0,10)), normalize=True)
+conf_matrix =  confusion_matrix(Ytest, Y_predict)
+disp = ConfusionMatrixDisplay(conf_matrix)
+disp.plot()
+plt.show()
+#can see that classes 1,3,5,8,9 are classified well
 
+#not using the original train because i want to keep the original data
+XYtrain = pd.concat([pd.DataFrame(data=Ytrain), pd.DataFrame(data=Xtrain)]
+                , axis=1)
+
+#small samples of data
+Xsmall = pd.concat([XYtrain[XYtrain['label']==i].iloc[:1000, 1:785] for i in range(0,10)], axis=0).values
+Ysmall = pd.concat([XYtrain[XYtrain['label']==i].iloc[:1000, 0] for i in range(0,10)], axis=0).values
+
+#need to shuffle because above method makes it in order of 0-9
+Xsmall, Ysmall = shuffle(Xsmall, Ysmall)
+
+#setting my penalties in a logspace, from 10^-2 to 10^3
+penalties = np.logspace(-2,3, num=10)
+
+#using k=3
+mcv_scores = []
+for C in penalties:
+    curr_svm = SVC(kernel='rbf', C=C)
+    fold = KFold(n_splits=3, random_state=1, shuffle=True)
+    # Cross validation 3-Fold scores        
+    mean_crossval = np.mean(cross_val_score(curr_svm, Xsmall, Ysmall, cv=fold))
+    mcv_scores.append(mean_crossval)
+    print("On C=", C, "\tMCV=", mean_crossval)
