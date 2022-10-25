@@ -9,6 +9,7 @@ from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.svm import SVC
+from sklearn import metrics
 from sklearn.utils import shuffle
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
@@ -43,9 +44,27 @@ Xmean = Xtrain.mean(axis=0)
 Xtrainfit = Xtrain - Xmean
 Xtestfit = Xtest - Xmean
 
-SVM = SVC(kernel = "rbf", C = 1.0, gamma="auto")
-#https://www.geeksforgeeks.org/radial-basis-function-kernel-machine-learning/
-#use radial basis function to help "draw" the decision boundary
+#Dimension Reduction to p=100 using PCA
+pca = PCA(n_components=100, random_state=42)
+Xtrainpca = pca.fit_transform(Xtrain)
+Xvalidpca = pca.transform(Xvalid)
+Xtestpca = pca.transform(Xtest)
+
+
+SVM = SVC(kernel = "rbf", C = 13.0, gamma="auto")
+# #https://www.geeksforgeeks.org/radial-basis-function-kernel-machine-learning/
+# #use radial basis function to help "draw" the decision boundary
+SVM.fit(Xtrainpca, Ytrain)
+Y_predict = SVM.predict(Xtrainpca)
+train_acc = metrics.accuracy_score(Ytrain,Y_predict)
+#0.943375
+Y_validpredict = SVM.predict(Xvalidpca)
+valid_acc = metrics.accuracy_score(Yvalid,Y_validpredict)
+#0.89925
+
+Y_testpredict = SVM.predict(Xtestpca)
+test_acc = metrics.accuracy_score(Ytest,Y_testpredict)
+
 
 SVM.fit(Xtrainfit, Ytrain)
 Y_predict = SVM.predict(Xtestfit)
@@ -82,3 +101,10 @@ for C in penalties:
     mean_crossval = np.mean(cross_val_score(curr_svm, Xsmall, Ysmall, cv=fold))
     mcv_scores.append(mean_crossval)
     print("On C=", C, "\tMCV=", mean_crossval)
+#highest MCV of 87.01% when C = 21.544
+
+# #using k=10 --> highest MCV of 87.79% when C = 5.994
+
+
+
+
