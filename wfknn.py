@@ -26,7 +26,8 @@ test_x = df_test.drop("label", axis=1).to_numpy()
 test_x = test_x/255
 
 #show example of 1 image
-plt.imshow(train_x.iloc[0,:].values.reshape([28,28])) ; train_y.iloc[0]
+plt.imshow(train_x.iloc[0,:].values.reshape([28,28]))
+train_y.iloc[0]
 
 
 #knn models

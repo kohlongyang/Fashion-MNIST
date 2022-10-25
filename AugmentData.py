@@ -31,7 +31,6 @@ def augment_data(x_train, y_train):
         right[i] = r
         up[i] = u
         down[i] = d
-
     # Append the new data:
     x_train_augmented = np.copy(x_train)  # original data
     x_train_augmented = np.append(x_train_augmented, left, axis=0)  # left-shifted
@@ -56,7 +55,7 @@ def generate_augmented_data_csv(cols, x_train_augmented, y_train_augmented):
 def run():
     x_train, y_train, x_test, y_test, cols = init()
     x_train_augmented, y_train_augmented = augment_data(x_train, y_train)
-    generate_augmented_data_csv(cols, x_train_augmented, y_train_augmented)
+    # generate_augmented_data_csv(cols, x_train_augmented, y_train_augmented)
 
 if __name__ == "__main__":
     run()
