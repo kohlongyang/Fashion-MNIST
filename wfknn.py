@@ -11,8 +11,8 @@ import math
 #data preprocessing
 
 #load data
-df = pd.read_csv("/content/fashion-mnist_train.csv")
-df_test = pd.read_csv("/content/fashion-mnist_test.csv")
+df = pd.read_csv("Dataset/fashion-mnist_train.csv")
+df_test = pd.read_csv("Dataset/fashion-mnist_test.csv")
 
 #taking out labels
 train_y = df.label.to_numpy()
@@ -26,7 +26,8 @@ test_x = df_test.drop("label", axis=1).to_numpy()
 test_x = test_x/255
 
 #show example of 1 image
-plt.imshow(train_x.iloc[0,:].values.reshape([28,28])) ; train_y.iloc[0]
+plt.imshow(train_x.iloc[0,:].values.reshape([28,28]))
+train_y.iloc[0]
 
 
 #knn models
