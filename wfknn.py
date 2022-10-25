@@ -11,8 +11,8 @@ import math
 #data preprocessing
 
 #load data
-df = pd.read_csv("Dataset/fashion-mnist_train.csv")
-df_test = pd.read_csv("Dataset/fashion-mnist_test.csv")
+df = pd.read_csv("/content/fashion-mnist_train.csv")
+df_test = pd.read_csv("/content/fashion-mnist_test.csv")
 
 #taking out labels
 train_y = df.label.to_numpy()
