@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import random
 import time
-#from lySVM import Y_testpredict
+
 
 import sklearn
 from sklearn.decomposition import PCA
